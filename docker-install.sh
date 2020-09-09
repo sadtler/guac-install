@@ -53,13 +53,17 @@ fi
 
 # Install Stuff
 apt-get update
-apt-get -y install docker-ce mariadb-client wget
+apt install apt-transport-https ca-certificates curl software-properties-common gnupg
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+apt-get update
+apt-get -y install docker-ce mariadb-client
 
 # Set SERVER to be the preferred download server from the Apache CDN
 SERVER="http://apache.org/dyn/closer.cgi?action=download&filename=guacamole/${GUACVERSION}"
 
 # Download Guacamole authentication extensions
-wget -O guacamole-auth-jdbc-${GUACVERSION}.tar.gz ${SERVER}/binary/guacamole-auth-jdbc-${GUACVERSION}.tar.gz
+curl -o guacamole-auth-jdbc-${GUACVERSION}.tar.gz ${SERVER}/binary/guacamole-auth-jdbc-${GUACVERSION}.tar.gz
 if [ $? -ne 0 ]; then
     echo "Failed to download guacamole-auth-jdbc-${GUACVERSION}.tar.gz"
     echo "${SERVER}/binary/guacamole-auth-jdbc-${GUACVERSION}.tar.gz"
